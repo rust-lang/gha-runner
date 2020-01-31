@@ -48,6 +48,13 @@ namespace GitHub.Runner.Listener
 
         public async Task<bool> SelfUpdate(AgentRefreshMessage updateMessage, IJobDispatcher jobDispatcher, bool restartInteractiveRunner, CancellationToken token)
         {
+            // RUST: disable self-updates
+            var rustAvoidUnreachableCodeError = true;
+            if (rustAvoidUnreachableCodeError) {
+                Console.WriteLine("RUST: prevented self-update");
+                return false;
+            }
+
             Busy = true;
             try
             {
