@@ -1,3 +1,23 @@
+# Changes in this fork
+
+This fork applies two changes to [the official GitHub Actions
+runner][official]:
+
+* A new environment variable used to configure the runner is added,
+  `RUST_WHITELISTED_EVENT_NAME`. When the variable is set, if a job has a
+  different event type than the one allowed by the variable the job will be
+  canceled before the build is started on the machine.
+* Self-updates are prevented, to avoid the changes in the fork from being
+  overridden.
+
+**This is intended to only be used by the Rust Infrastructure Team.** We have
+no plans to provide support or continue maintaining this fork, so please don't
+rely on it. Thanks!
+
+[official]: https://github.com/actions/runner
+
+---
+
 <p align="center">
   <img src="docs/res/github-graph.png">
 </p>
