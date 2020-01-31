@@ -122,6 +122,16 @@ namespace GitHub.Runner.Worker
                 jobContext.Start();
                 jobContext.Debug($"Starting: {message.JobDisplayName}");
 
+                // RUST: If the event type is not allowed exit the job before anything is run.
+                var rustExpectedEvent = System.Environment.GetEnvironmentVariable("RUST_WHITELISTED_EVENT_NAME");
+                if (rustExpectedEvent != null) {
+                    var rustGitHubContext = (Pipelines.ContextData.DictionaryContextData) message.ContextData["github"];
+                    var rustEventName = rustGitHubContext["event_name"].ToString();
+                    if (rustEventName != rustExpectedEvent) {
+                        return await CompleteJobAsync(server, jobContext, message, TaskResult.Canceled);
+                    }
+                }
+
                 runnerShutdownRegistration = HostContext.RunnerShutdownToken.Register(() =>
                 {
                     // log an issue, then runner get shutdown by Ctrl-C or Ctrl-Break.
