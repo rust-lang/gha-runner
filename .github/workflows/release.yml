@@ -47,7 +47,7 @@ jobs:
     needs: check
     strategy:
       matrix:
-        runtime: [ linux-x64, linux-arm64, linux-arm, win-x64, osx-x64 ]
+        runtime: [ linux-x64, linux-arm64, win-x64 ]
         include:
         - runtime: linux-x64
           os: ubuntu-latest
@@ -55,14 +55,6 @@ jobs:
 
         - runtime: linux-arm64
           os: ubuntu-latest
-          devScript: ./dev.sh
-
-        - runtime: linux-arm
-          os: ubuntu-latest
-          devScript: ./dev.sh
-
-        - runtime: osx-x64
-          os: macOS-latest
           devScript: ./dev.sh
 
         - runtime: win-x64
@@ -78,13 +70,6 @@ jobs:
       run: |
         ${{ matrix.devScript }} layout Release ${{ matrix.runtime }}
       working-directory: src
-
-    # Run tests
-    - name: L0
-      run: |
-        ${{ matrix.devScript }} test
-      working-directory: src
-      if: matrix.runtime != 'linux-arm64' && matrix.runtime != 'linux-arm'
 
     # Create runner package tar.gz/zip
     - name: Package Release
@@ -163,26 +148,6 @@ jobs:
         upload_url: ${{ steps.createRelease.outputs.upload_url }}
         asset_path: ${{ github.workspace }}/actions-runner-linux-x64-${{ steps.releaseNote.outputs.version }}.tar.gz
         asset_name: actions-runner-linux-x64-${{ steps.releaseNote.outputs.version }}.tar.gz
-        asset_content_type: application/octet-stream
-
-    - name: Upload Release Asset (osx-x64)
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.createRelease.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/actions-runner-osx-x64-${{ steps.releaseNote.outputs.version }}.tar.gz
-        asset_name: actions-runner-osx-x64-${{ steps.releaseNote.outputs.version }}.tar.gz
-        asset_content_type: application/octet-stream
-
-    - name: Upload Release Asset (linux-arm)
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.createRelease.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/actions-runner-linux-arm-${{ steps.releaseNote.outputs.version }}.tar.gz
-        asset_name: actions-runner-linux-arm-${{ steps.releaseNote.outputs.version }}.tar.gz
         asset_content_type: application/octet-stream
 
     - name: Upload Release Asset (linux-arm64)
