@@ -414,3 +414,9 @@ jobs:
         asset_path: ${{ github.workspace }}/linux-arm64-trimmedpackages.json
         asset_name: actions-runner-linux-arm64-${{ steps.releaseNote.outputs.version }}-trimmedpackages.json
         asset_content_type: application/octet-stream
+
+    # Bump the version number in rust-lang/gha-self-hosted
+    - name: Bump the version number in rust-lang/gha-self-hosted
+      run: ./rust-bump-gha-self-hosted.sh
+      env:
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
